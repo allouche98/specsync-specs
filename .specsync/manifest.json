@@ -1,0 +1,17 @@
+{
+  "org" : "hackathonCapAmadeus",
+  "generatedAt" : "2026-06-30T16:45:14.142900625+02:00",
+  "services" : [ {
+    "name" : "loyaltymanagement",
+    "status" : "UP_TO_DATE",
+    "lastAnalyzedCommit" : "a0321cd4386bc946a394b585316e19a23f985828",
+    "lastSpecCommit" : "f17f46248127bdf6ba8b4b10c1ad7c3014d824bc",
+    "lastInputHash" : "223517456ad62115d22dfd391894f67014ce1b9e9a6d6184885c09a215615c83"
+  }, {
+    "name" : "microservice1",
+    "status" : "UP_TO_DATE",
+    "lastAnalyzedCommit" : "954d85981a924722137ae7edea41a6ffbf5b2444",
+    "lastSpecCommit" : "c7ff9f56c708fb5be4f43cb680043483122e3128",
+    "lastInputHash" : "114709d469695148ac59001a0b6f4f67457be70d3909991cffcbd2766815b388"
+  } ]
+}
