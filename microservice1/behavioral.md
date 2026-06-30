@@ -54,3 +54,6 @@ The exact error payload structure for framework-generated errors is _not determi
 ## Versioning
 
 No URI versioning prefix (e.g., `/v1/`), version-bearing request/response headers, or schema-evolution mechanism is present in the source. The artifact version is `1.0.0-SNAPSHOT` (declared in `pom.xml`) but this is not surfaced in the API path or any header. _No API versioning strategy is evident from the code._
+
+## Drift Alignment (auto-suggested)
+- [ ] Add endpoint `GET /hello`
