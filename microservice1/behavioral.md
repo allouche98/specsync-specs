@@ -15,10 +15,10 @@ generator: specsync
 
 | Method | Path | Purpose | Request | Response |
 |--------|------|---------|---------|----------|
-| `GET` | `/hello` | Returns a plain-text greeting string | No request body; no path/query parameters | `200 OK` — body: plain-text string (e.g., `"Hello"`) |
-| `GET` | `/hello` | Returns a numeric value as a string | No request body; no path/query parameters | `200 OK` — body: JSON string (e.g., `"2"`) |
+| `GET` | `/greeting` | Returns a plain-text greeting string | No request body; no path/query parameters | `200 OK` — body: plain-text string (e.g., `"Hello"`) |
+| `GET` | `/greeting` | Returns a numeric value as a string | No request body; no path/query parameters | `200 OK` — body: JSON string (e.g., `"2"`) |
 
-> **Note:** Both handlers are mapped to `GET /hello` within `HelloResource.java`. The two `@GET` methods differ only in their declared `@Produces` media type (`text/plain` vs. `application/json`). At runtime, JAX-RS content negotiation (via the `Accept` request header) determines which variant is invoked. The effective behaviour of content negotiation and any conflict resolution is _not determinable from code_ beyond what the annotations indicate.
+> **Note:** Both handlers are mapped to `GET /greeting` within `HelloResource.java`. The two `@GET` methods differ only in their declared `@Produces` media type (`text/plain` vs. `application/json`). At runtime, JAX-RS content negotiation (via the `Accept` request header) determines which variant is invoked. The effective behaviour of content negotiation and any conflict resolution is _not determinable from code_ beyond what the annotations indicate.
 
 ---
 
@@ -30,7 +30,7 @@ _Not determinable from code._
 
 ## Input / Output Formats
 
-- **Content negotiation:** The `/hello` endpoint declares two producer variants:
+- **Content negotiation:** The `/greeting` endpoint declares two producer variants:
   - `text/plain` — returns a bare string (`"Hello"`).
   - `application/json` — returns a JSON-encoded string (`"2"`, i.e., the integer `2` serialised as a string).
 - **Serialization:** Plain-text and JSON; no Protobuf or Avro involved.
@@ -44,7 +44,7 @@ _Not determinable from code._
 
 No custom error-handling code, exception mappers, or validation logic is present in the source snapshot. Default Quarkus/JAX-RS framework behaviour applies:
 
-- A `GET /hello` request with an `Accept` header that cannot be satisfied by either `text/plain` or `application/json` will result in a framework-generated `406 Not Acceptable`.
+- A `GET /greeting` request with an `Accept` header that cannot be satisfied by either `text/plain` or `application/json` will result in a framework-generated `406 Not Acceptable`.
 - Other standard HTTP error codes (e.g., `404`, `500`) are governed entirely by the Quarkus REST runtime defaults.
 
 The exact error payload structure for framework-generated errors is _not determinable from code._
