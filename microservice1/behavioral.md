@@ -1,50 +1,56 @@
 ---
 repo: microservice1
 spec_type: behavioral
-commit: 954d85981a924722137ae7edea41a6ffbf5b2444
+commit: 67a1a3cf92762515763f4e7d8cea0cfc4eeb30c1
 model: anthropic:claude-sonnet-4-6
 prompt_version: v1
-input_hash: 114709d469695148ac59001a0b6f4f67457be70d3909991cffcbd2766815b388
-generated_at: 2026-06-30T16:42:35.812096619+02:00
+input_hash: 50ee4e55544c2ceaf0a54f62861f4c7d0de3a524a44ec92fd862370af5bb0606
+generated_at: 2026-06-30T16:52:40.120538861+02:00
 generator: specsync
 ---
 
 ## API Contracts
 
-**Protocol:** REST (HTTP) via Jakarta REST (JAX-RS), implemented with Quarkus REST (`io.quarkus:quarkus-rest`). The service listens on port `8080`.
+**Protocol:** REST (HTTP) over Jakarta REST (JAX-RS), implemented with Quarkus REST (`quarkus-rest`). The service listens on port `8080`.
 
-| Method | Path     | Purpose                        | Request                  | Response                                      |
-|--------|----------|--------------------------------|--------------------------|-----------------------------------------------|
-| GET    | `/hello` | Returns a plain-text greeting  | No request body or parameters | `200 OK` — plain-text string (e.g. `"Hello"`) |
+| Method | Path | Purpose | Request | Response |
+|--------|------|---------|---------|----------|
+| `GET` | `/hello` | Returns a plain-text greeting string | No request body; no path/query parameters | `200 OK` — body: plain-text string (e.g., `"Hello"`) |
+| `GET` | `/hello` | Returns a numeric value as a string | No request body; no path/query parameters | `200 OK` — body: JSON string (e.g., `"2"`) |
 
-> **Note:** The production resource (`HelloResource.java`) returns the literal string `"Hello"`. The test (`HelloResourceTest.java`) asserts the body is `"Hello from Quarkus REST"`, which suggests a possible discrepancy between the captured source sample and the tested artifact; the verified contract response body from the test assertion is `Hello from Quarkus REST`.
+> **Note:** Both handlers are mapped to `GET /hello` within `HelloResource.java`. The two `@GET` methods differ only in their declared `@Produces` media type (`text/plain` vs. `application/json`). At runtime, JAX-RS content negotiation (via the `Accept` request header) determines which variant is invoked. The effective behaviour of content negotiation and any conflict resolution is _not determinable from code_ beyond what the annotations indicate.
+
+---
 
 ## Event Schemas
 
 _Not determinable from code._
 
-No message broker integration, event topics, or asynchronous messaging constructs are present in the codebase.
+---
 
 ## Input / Output Formats
 
-- **Content type (response):** `text/plain` — declared via `@Produces(MediaType.TEXT_PLAIN)` on the `GET /hello` handler.
-- **Serialization:** Plain string; no JSON, Protobuf, or Avro serialization is used.
-- **Request body:** None. The single endpoint accepts no request body, query parameters, or path parameters.
-- **Pagination:** Not applicable — the endpoint returns a single scalar value.
-- **Request/response envelope:** None. The response is a bare plain-text string with no wrapper structure.
+- **Content negotiation:** The `/hello` endpoint declares two producer variants:
+  - `text/plain` — returns a bare string (`"Hello"`).
+  - `application/json` — returns a JSON-encoded string (`"2"`, i.e., the integer `2` serialised as a string).
+- **Serialization:** Plain-text and JSON; no Protobuf or Avro involved.
+- **Request body:** None required for any documented endpoint.
+- **Pagination:** Not applicable — single-value responses only.
+- **Envelope:** No wrapper envelope; responses are bare scalar values.
+
+---
 
 ## Error Handling
 
-No explicit error handling, exception mappers, or custom error payload structures are defined in the source code. Behaviour for error conditions is governed entirely by the Quarkus/JAX-RS runtime defaults:
+No custom error-handling code, exception mappers, or validation logic is present in the source snapshot. Default Quarkus/JAX-RS framework behaviour applies:
 
-| Condition | Expected behaviour (framework default) |
-|-----------|----------------------------------------|
-| Method not allowed (e.g. `POST /hello`) | `405 Method Not Allowed` |
-| Path not found | `404 Not Found` |
-| Unhandled server exception | `500 Internal Server Error` |
+- A `GET /hello` request with an `Accept` header that cannot be satisfied by either `text/plain` or `application/json` will result in a framework-generated `406 Not Acceptable`.
+- Other standard HTTP error codes (e.g., `404`, `500`) are governed entirely by the Quarkus REST runtime defaults.
 
-No custom `ExceptionMapper`, `@ServerExceptionMapper`, or validation annotations are evidenced in the captured source.
+The exact error payload structure for framework-generated errors is _not determinable from code._
+
+---
 
 ## Versioning
 
-No API versioning strategy is implemented. There is no URI version prefix (e.g. `/v1/`), version header, or schema evolution mechanism present in the codebase. The artifact version is `1.0.0-SNAPSHOT` (Maven coordinate `com.example:hello-quarkus:1.0.0-SNAPSHOT`), but this is a build version only and is not surfaced in the API path or headers.
+No URI versioning prefix (e.g., `/v1/`), version-bearing request/response headers, or schema-evolution mechanism is present in the source. The artifact version is `1.0.0-SNAPSHOT` (declared in `pom.xml`) but this is not surfaced in the API path or any header. _No API versioning strategy is evident from the code._
